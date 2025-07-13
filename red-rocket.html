@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Rocket Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(#0b0c2a, #1a1b3b);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const rocket = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 100,
+            width: 50,
+            height: 100,
+            color: 'red',
+            speed: 7
+        };
+
+        const keys = {};
+
+        window.addEventListener('keydown', e => keys[e.key] = true);
+        window.addEventListener('keyup', e => keys[e.key] = false);
+
+        function drawRocket() {
+            ctx.fillStyle = rocket.color;
+            ctx.beginPath();
+            ctx.moveTo(rocket.x + rocket.width / 2, rocket.y);
+            ctx.lineTo(rocket.x, rocket.y + rocket.height);
+            ctx.lineTo(rocket.x + rocket.width, rocket.y + rocket.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function update() {
+            if (keys['ArrowLeft'] && rocket.x > 0) {
+                rocket.x -= rocket.speed;
+            }
+            if (keys['ArrowRight'] && rocket.x + rocket.width < canvas.width) {
+                rocket.x += rocket.speed;
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            update();
+            drawRocket();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
